@@ -59,9 +59,9 @@
         android:id="@+id/row3"
         android:weightSum="1">
         <EditText
-             android:layout_width="wrap_content"
-             android:layout_height="match_parent"
-             android:id="@+id/platebox"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:id="@+id/platebox"
             android:background="@drawable/rectangle"
             android:layout_weight="0.30"
             android:maxLines="1"
@@ -76,6 +76,7 @@
             android:background="@drawable/rectangle"
             android:onClick="calendarClick"
             android:id="@+id/dateHere"
+            android:maxLength="10"
             />
         <!-- android:hint="@string/phone_hint"
             android:inputType="phone" />-->
@@ -87,6 +88,7 @@
             android:background="@drawable/rectangle"
             android:onClick="calendarClick"
             android:id="@+id/lastdateHere"
+            android:maxLength="10"
             />
     </LinearLayout>
     <LinearLayout
