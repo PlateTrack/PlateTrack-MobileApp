@@ -2,35 +2,53 @@ package com.example.america.platetrack2;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.DatePicker;
 import android.widget.TextView;
-
 
 import java.util.EventListener;
 import java.util.Calendar;
 import java.text.DateFormat;
 import java.util.GregorianCalendar;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity {
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Button btn = (Button)findViewById(R.id.buttonCamera);
+        Button searchButton = (Button) findViewById(R.id.button);
+
+        searchButton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                EditText platebox = (EditText)findViewById(R.id.platebox);
+                String plate_number = platebox.getText().toString();
+                startActivity(new Intent(MainActivity.this, MapsActivity.class));
+
+            }
+
+        });
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, VideoCaptureActivity.class));
+            }
+        });
+
+
     }
 
-    @Override
-    public void onClick(View v) {
-        EditText platebox = (EditText)findViewById(R.id.platebox);
-        String plate_number = platebox.getText().toString();
-    }
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
         @Override
@@ -44,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // Create a new instance of DatePickerDialog and return it
             return new DatePickerDialog(getActivity(), this, year, month, day);
         }
-
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
             // Do something with the date chosen by the user
