@@ -17,14 +17,25 @@ import java.util.EventListener;
 import java.util.Calendar;
 import java.text.DateFormat;
 import java.util.GregorianCalendar;
+import java.util.StringTokenizer;
 
 public class MainActivity extends AppCompatActivity {
+
+//*******************************************************************
+    protected static TextView displayCurrentTime;
+    protected static TextView displayLastDate;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //4/3**********************************
+        displayCurrentTime = (TextView)findViewById(R.id.dateHere);
+        displayLastDate = (TextView)findViewById(R.id.lastdateHere);
+
+                //4/3**************************
 
         Button btn = (Button)findViewById(R.id.buttonCamera);
         Button searchButton = (Button) findViewById(R.id.button);
@@ -49,7 +60,39 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+   // 4/4 DatePickerDialog.OnDateSetListener from_dateListener,to_dateListener;
+
+    DatePickerDialog.OnDateSetListener from_dateListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            displayCurrentTime.setText(String.valueOf(year) + '/' + String.valueOf(month + 1) + '/' + String.valueOf(day));
+        }
+    };
+
+    DatePickerDialog.OnDateSetListener to_dateListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            displayLastDate.setText(String.valueOf(year) + '/' + String.valueOf(month + 1) + '/' + String.valueOf(day));
+        }
+    };
+
+
+
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+
+
+            public void onDateSet (DatePicker view,int year, int month, int day){
+            // Do something with the date chosen by the user
+            //eventually these dates will be sent to the cloud to retrieve the information about the plates numbers.
+            //4/3     Calendar cal = new GregorianCalendar(year, month, day);
+            /* final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
+            ((TextView) findViewById(R.id.dateHere)).setText(dateFormat.format(cal.getTime()));*/
+            //4/3     setDate(cal);
+
+            displayCurrentTime.setText(String.valueOf(month + 1) + '/' + String.valueOf(day) + '/' + String.valueOf(year));
+            //  displayLastDate.setText(String.valueOf(year)+'/'+ String.valueOf(month+1)+'/'+String.valueOf(day));
+
+        }
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -63,15 +106,6 @@ public class MainActivity extends AppCompatActivity {
             return new DatePickerDialog(getActivity(), this, year, month, day);
         }
 
-        public void onDateSet(DatePicker view, int year, int month, int day) {
-            // Do something with the date chosen by the user
-            //eventually these dates will be sent to the cloud to retrieve the information about the plates numbers.
-            Calendar cal = new GregorianCalendar(year, month, day);
-            /* final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
-            ((TextView) findViewById(R.id.dateHere)).setText(dateFormat.format(cal.getTime()));*/
-            //setDate(cal);
-        }
-
     }
 /**
     private void setDate(final Calendar calendar){
@@ -82,8 +116,12 @@ public class MainActivity extends AppCompatActivity {
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }
+// this function is the responsible for putting the date in the input box.
+    /*  //not necessary for now
     private void setDate(final Calendar calendar) {
         final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
         ((TextView) findViewById(R.id.dateHere)).setText(dateFormat.format(calendar.getTime()));
+
     }
+    */
 }
