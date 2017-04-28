@@ -19,6 +19,7 @@ import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -31,8 +32,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-
     }
 
 
@@ -63,9 +62,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(springfield));
 
-        route(springfield, springfield2, GMapV2Direction.MODE_DRIVING, Color.BLUE);
+        route(springfield2, springfield, GMapV2Direction.MODE_DRIVING, Color.BLUE);
+        route(springfield, springfield2, GMapV2Direction.MODE_DRIVING, Color.RED);
 
         route(springfield3, springfield4, GMapV2Direction.MODE_WALKING, Color.GREEN);
+
+
     }
 
     protected void route(LatLng sourcePosition, LatLng destPosition, String mode, final int color) {

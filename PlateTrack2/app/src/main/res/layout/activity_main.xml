@@ -86,7 +86,7 @@
             android:layout_toRightOf="@+id/dateHere"
             android:layout_weight="0.30"
             android:background="@drawable/rectangle"
-            android:onClick="calendarClick"
+            android:onClick="calendarClick2"
             android:id="@+id/lastdateHere"
             android:maxLength="10"
             />
