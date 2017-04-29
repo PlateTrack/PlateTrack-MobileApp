@@ -42,8 +42,6 @@ public class MainActivity extends AppCompatActivity {
         Button btn = (Button)findViewById(R.id.buttonCamera);
         Button searchButton = (Button) findViewById(R.id.button);
 
-
-
         //the send_string_from and send_string_to should be added here so that the dates are sent to the database
 
         searchButton.setOnClickListener(new View.OnClickListener(){
@@ -51,9 +49,16 @@ public class MainActivity extends AppCompatActivity {
 
                 EditText platebox = (EditText)findViewById(R.id.platebox);
                 String plate_number = platebox.getText().toString();
-                startActivity(new Intent(MainActivity.this, MapsActivity.class));
+
                 //here, send the dates and plate number to the database:
                 //plate_number, send_string_from, send_string_to will be sent.
+
+                try {
+//                    new PlateTracker(MainActivity.this, plate_number, send_string_from, send_string_to).execute();
+                    new PlateTracker(MainActivity.this, "VAANG0", "4/28/2017", "4/30/2017").execute();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
         });
@@ -65,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
         @Override

@@ -24,10 +24,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
 
+    public static ArrayList<PlateCapture> plateCaptures;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -46,27 +49,55 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mMap.setMinZoomPreference(14.0f);
-        // mMap.setMyLocationEnabled(true);
-        // Add a marker in Sydney and move the camera
-        LatLng springfield = new LatLng(37.2090, -93.2923);
-        LatLng springfield2 = new LatLng(37.207096, -93.292449);
-        LatLng springfield3 = new LatLng(37.206301, -93.292361);
-        LatLng springfield4 = new LatLng(37.000, -93.200);
 
-//        mMap.addMarker(new MarkerOptions().position(springfield).title("Marker in Springfield"));
+        if (MapsActivity.plateCaptures != null && MapsActivity.plateCaptures.size() > 0) {
+
+            mMap = googleMap;
+            mMap.setMinZoomPreference(14.0f);
+
+
+            // MapsActivity.plateCaptures to load LatLngs and create routes
+            // Example
+
+            PlateCapture previous = null;
+            for (PlateCapture pc : MapsActivity.plateCaptures)
+            {
+                // This means its the beginning of the routes
+                if (previous == null){
+                    previous = pc;
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(pc.getLatitude(), pc.getLongitude())));
+                }
+                // As an example these will all be blue. Eventually we will need to differentiate using the date and time properties and use differing colors.
+                else {
+                    LatLng start = new LatLng(previous.getLatitude(), previous.getLongitude());
+                    LatLng end = new LatLng(pc.getLongitude(), pc.getLatitude());
+                    route(start, end, GMapV2Direction.MODE_DRIVING, Color.BLUE);
+                }
+            }
+        }
+        else {
+            return;
+        }
+
+
+//        // mMap.setMyLocationEnabled(true);
+//        // Add a marker in Sydney and move the camera
+//        LatLng springfield = new LatLng(37.2090, -93.2923);
+//        LatLng springfield2 = new LatLng(37.207096, -93.292449);
+//        LatLng springfield3 = new LatLng(37.206301, -93.292361);
+//        LatLng springfield4 = new LatLng(37.000, -93.200);
 //
-//        mMap.addMarker(new MarkerOptions().position(springfield2).title("Marker in Springfield2"));
-
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(springfield));
-
-        route(springfield2, springfield, GMapV2Direction.MODE_DRIVING, Color.BLUE);
-        route(springfield, springfield2, GMapV2Direction.MODE_DRIVING, Color.RED);
-
-        route(springfield3, springfield4, GMapV2Direction.MODE_WALKING, Color.GREEN);
-
+////        mMap.addMarker(new MarkerOptions().position(springfield).title("Marker in Springfield"));
+////
+////        mMap.addMarker(new MarkerOptions().position(springfield2).title("Marker in Springfield2"));
+//
+//
+//
+//
+//        route(springfield2, springfield, GMapV2Direction.MODE_DRIVING, Color.BLUE);
+//        route(springfield, springfield2, GMapV2Direction.MODE_DRIVING, Color.RED);
+//
+//        route(springfield3, springfield4, GMapV2Direction.MODE_WALKING, Color.GREEN);
 
     }
 
