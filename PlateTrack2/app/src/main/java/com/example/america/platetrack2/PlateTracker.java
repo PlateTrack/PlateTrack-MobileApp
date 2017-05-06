@@ -22,7 +22,7 @@ public class PlateTracker extends AsyncTask<Void, Void, String> {
     Context context;
     String plate, start, end;
 
-    ArrayList<PlateCapture> DateLongLat;
+    ArrayList<PlateCapture> dateLongLat;
 
     public PlateTracker(Context c, String plate, String start, String end) {
         this.context = c;
@@ -53,9 +53,9 @@ public class PlateTracker extends AsyncTask<Void, Void, String> {
             java.sql.ResultSet rs = st.executeQuery("SELECT capture_date, capture_time, latitude, longitude FROM PlateTrackDB.plate_capture WHERE plate_number = '" + this.plate +
                     "' AND capture_date BETWEEN STR_TO_DATE('" + start + "', '%m/%d/%Y') AND STR_TO_DATE('" + end + "', '%m/%d/%Y');");
 
-            DateLongLat = new ArrayList<>();
+            dateLongLat = new ArrayList<>();
             while (rs.next()) {
-                DateLongLat.add(new PlateCapture(rs.getDate("capture_date"), rs.getTime("capture_time"), rs.getDouble("latitude"), rs.getDouble("longitude")));
+                dateLongLat.add(new PlateCapture(rs.getDate("capture_date"), rs.getTime("capture_time"), rs.getDouble("latitude"), rs.getDouble("longitude")));
             }
 
             rs.close();
@@ -72,7 +72,7 @@ public class PlateTracker extends AsyncTask<Void, Void, String> {
 
             Intent i = new Intent(context, MapsActivity.class);
 
-            MapsActivity.plateCaptures = this.DateLongLat;
+            MapsActivity.plateCaptures = this.dateLongLat;
 
             mProgressDialog.dismiss();
 

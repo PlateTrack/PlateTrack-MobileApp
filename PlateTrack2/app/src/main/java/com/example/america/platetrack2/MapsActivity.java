@@ -5,7 +5,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -18,9 +20,11 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import org.w3c.dom.Document;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends ActionBarActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
 
@@ -60,8 +64,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // Example
 
             PlateCapture previous = null;
+
+            int[] colors = new int[] {Color.RED, Color.GREEN, Color.GREEN, Color.BLACK, Color.CYAN, Color.YELLOW, Color.MAGENTA};
+            int colorId = 0;
             for (PlateCapture pc : MapsActivity.plateCaptures)
             {
+                long date = pc.getDate().getTime();
+                long time = pc.getTime().getTime();
+
                 // This means its the beginning of the routes
                 if (previous == null){
                     previous = pc;
@@ -69,15 +79,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
                 // As an example these will all be blue. Eventually we will need to differentiate using the date and time properties and use differing colors.
                 else {
+                    long dateDiff = pc.getDate().getTime() - previous.getDate().getTime();
+                    long timeDiff = pc.getTime().getTime() - previous.getTime().getTime();
+                    timeDiff = (timeDiff/1000)/60;
+                   // long timeDiff =  getDateDiff(previous.getDate(),pc.getDate(),TimeUnit.MINUTES);
+                    if (dateDiff == 0 && timeDiff > 30){
+                        colorId++;
+                    }
+                    if(colorId==7){
+                        colorId = 0;
+                    }
                     LatLng start = new LatLng(previous.getLatitude(), previous.getLongitude());
-                    LatLng end = new LatLng(pc.getLongitude(), pc.getLatitude());
-                    route(start, end, GMapV2Direction.MODE_DRIVING, Color.BLUE);
+                    LatLng end = new LatLng( pc.getLatitude(),pc.getLongitude());
+                    route(start, end, GMapV2Direction.MODE_DRIVING, colors[colorId]);
+                    previous = pc;
                 }
+
             }
+
+
         }
-        else {
-            return;
-        }
+    }
 
 
 //        // mMap.setMyLocationEnabled(true);
@@ -98,8 +120,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        route(springfield, springfield2, GMapV2Direction.MODE_DRIVING, Color.RED);
 //
 //        route(springfield3, springfield4, GMapV2Direction.MODE_WALKING, Color.GREEN);
-
-    }
 
     protected void route(LatLng sourcePosition, LatLng destPosition, String mode, final int color) {
         final Handler handler = new Handler() {
@@ -125,5 +145,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         new GMapV2DirectionAsyncTask(handler, sourcePosition, destPosition, mode, color).execute();
 
+    }
+
+    /**
+     * Get a diff between two dates
+     * @param date1 the oldest date
+     * @param date2 the newest date
+     * @param timeUnit the unit in which you want the diff
+     * @return the diff value, in the provided unit
+     */
+    private long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
+        long diffInMillies = date2.getTime() - date1.getTime();
+        return timeUnit.convert(diffInMillies,TimeUnit.MINUTES);
     }
 }
