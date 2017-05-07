@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
+
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -51,7 +54,8 @@ public class PlateTracker extends AsyncTask<Void, Void, String> {
 //            }
 
             java.sql.ResultSet rs = st.executeQuery("SELECT capture_date, capture_time, latitude, longitude FROM PlateTrackDB.plate_capture WHERE plate_number = '" + this.plate +
-                    "' AND capture_date BETWEEN STR_TO_DATE('" + start + "', '%m/%d/%Y') AND STR_TO_DATE('" + end + "', '%m/%d/%Y');");
+                    "' AND capture_date BETWEEN STR_TO_DATE('" + start + "', '%m/%d/%Y') AND STR_TO_DATE('" + end + "', '%m/%d/%Y')" +
+                    " ORDER BY capture_time;");
 
             dateLongLat = new ArrayList<>();
             while (rs.next()) {
@@ -70,13 +74,50 @@ public class PlateTracker extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(String result) {
         if (result.equals("Complete")) {
 
-            Intent i = new Intent(context, MapsActivity.class);
+            //Intent i = new Intent(context, MapsActivity.class);
 
-            MapsActivity.plateCaptures = this.dateLongLat;
+            MainActivity.routes = new ArrayList<>();
+            Route route = null;
+            PlateCapture previous = null;
+            for (PlateCapture pc : this.dateLongLat)
+            {
+                long date = pc.getDate().getTime();
+                long time = pc.getTime().getTime();
+
+                // This means its the beginning of the routes
+                if (previous == null){
+                    previous = pc;
+                    route = new Route();
+                    route.points = new ArrayList<>();
+                    route.points.add(pc);
+                }
+                // As an example these will all be blue. Eventually we will need to differentiate using the date and time properties and use differing colors.
+                else {
+                    long dateDiff = pc.getDate().getTime() - previous.getDate().getTime();
+                    long timeDiff = pc.getTime().getTime() - previous.getTime().getTime();
+                    timeDiff = (timeDiff/1000)/60;
+                    // long timeDiff =  getDateDiff(previous.getDate(),pc.getDate(),TimeUnit.MINUTES);
+                    if (dateDiff == 0 && timeDiff > 30){
+                        MainActivity.routes.add(route);
+                        previous = pc;
+                        route = new Route();
+                        route.points = new ArrayList<>();
+                        route.points.add(pc);
+                    }
+                    else {
+                        route.points.add(pc);
+                        previous = pc;
+                    }
+                }
+
+            }
+            MainActivity.routes.add(route);
 
             mProgressDialog.dismiss();
 
-            context.startActivity(new Intent(context, MapsActivity.class));
+            ((MainActivity) context).showRouteList();
+
+            //context.startActivity(new Intent(context, MapsActivity.class));
         }
     }
 }

@@ -28,7 +28,7 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     private GoogleMap mMap;
 
-    public static ArrayList<PlateCapture> plateCaptures;
+    public static ArrayList<Route> routes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,47 +54,39 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-        if (MapsActivity.plateCaptures != null && MapsActivity.plateCaptures.size() > 0) {
+        googleMap.clear();
 
-            mMap = googleMap;
-            mMap.setMinZoomPreference(14.0f);
+        mMap = googleMap;
+        mMap.setMinZoomPreference(14.0f);
+
+        if (MapsActivity.routes != null && MapsActivity.routes.size() > 0) {
+
 
 
             // MapsActivity.plateCaptures to load LatLngs and create routes
             // Example
 
-            PlateCapture previous = null;
-
-            int[] colors = new int[] {Color.RED, Color.GREEN, Color.GREEN, Color.BLACK, Color.CYAN, Color.YELLOW, Color.MAGENTA};
+            int[] colors = new int[] {Color.RED, Color.GREEN, Color.BLUE, Color.BLACK, Color.CYAN, Color.YELLOW, Color.MAGENTA};
             int colorId = 0;
-            for (PlateCapture pc : MapsActivity.plateCaptures)
+            PlateCapture previous = null;
+            for (Route r : MapsActivity.routes)
             {
-                long date = pc.getDate().getTime();
-                long time = pc.getTime().getTime();
-
-                // This means its the beginning of the routes
-                if (previous == null){
-                    previous = pc;
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(pc.getLatitude(), pc.getLongitude())));
-                }
-                // As an example these will all be blue. Eventually we will need to differentiate using the date and time properties and use differing colors.
-                else {
-                    long dateDiff = pc.getDate().getTime() - previous.getDate().getTime();
-                    long timeDiff = pc.getTime().getTime() - previous.getTime().getTime();
-                    timeDiff = (timeDiff/1000)/60;
-                   // long timeDiff =  getDateDiff(previous.getDate(),pc.getDate(),TimeUnit.MINUTES);
-                    if (dateDiff == 0 && timeDiff > 30){
-                        colorId++;
+                for (PlateCapture pc : r.points) {
+                    if (previous == null) {
+                        previous = pc;
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(pc.getLatitude(), pc.getLongitude())));
                     }
-                    if(colorId==7){
-                        colorId = 0;
+                    else {
+                        LatLng start = new LatLng(previous.getLatitude(), previous.getLongitude());
+                        LatLng end = new LatLng( pc.getLatitude(),pc.getLongitude());
+                        route(start, end, GMapV2Direction.MODE_DRIVING, colors[colorId]);
+                        previous = pc;
                     }
-                    LatLng start = new LatLng(previous.getLatitude(), previous.getLongitude());
-                    LatLng end = new LatLng( pc.getLatitude(),pc.getLongitude());
-                    route(start, end, GMapV2Direction.MODE_DRIVING, colors[colorId]);
-                    previous = pc;
                 }
-
+                colorId++;
+                if (colorId == 7) {
+                    colorId = 0;
+                }
             }
 
 

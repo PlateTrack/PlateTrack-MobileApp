@@ -80,6 +80,7 @@
             />
         <!-- android:hint="@string/phone_hint"
             android:inputType="phone" />-->
+
         <EditText
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -100,20 +101,22 @@
         android:id="@+id/row4"
         android:weightSum="1">
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="173dp"
         android:layout_height="50dp"
         android:layout_below="@id/row3"
         android:text="Search"
         android:onClick="onClick"
-        android:id="@+id/button" />
+        android:id="@+id/searchBtn" />
+
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_below="@id/row3"
-            android:text="Capture"
-            android:onClick="onClick"
-            android:id="@+id/buttonCamera" />
+            android:id="@+id/viewOnMapBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="View on Map" />
     </LinearLayout>
+    <ListView android:id="@+id/routeListView" android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/row4" />
 <!--
     <fragment
         android:layout_width="match_parent"
