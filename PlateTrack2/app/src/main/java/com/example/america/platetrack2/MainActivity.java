@@ -58,6 +58,10 @@ public class MainActivity extends AppCompatActivity {
 
         viewOnMapButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                if (routes == null || routes.size() == 0 || routes.get(0) == null) {
+                    return;
+                }
+
                 ArrayList<Route> checkedRoutes = new ArrayList<Route>();
                 for (Route route : routes) {
                     if (route.isChecked) {
@@ -82,8 +86,8 @@ public class MainActivity extends AppCompatActivity {
                 //plate_number, send_string_from, send_string_to will be sent.
 
                 try {
-                    //new PlateTracker(MainActivity.this, plate_number, send_string_from, send_string_to).execute();
-                    new PlateTracker(MainActivity.this, "VAANG0", "5/09/2017", "5/10/2017").execute();
+                    new PlateTracker(MainActivity.this, plate_number, send_string_from, send_string_to).execute();
+                    //new PlateTracker(MainActivity.this, "VAANG0", "5/09/2017", "5/10/2017").execute();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -100,6 +104,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showRouteList() {
+        if (routes == null || routes.size() == 0 || routes.get(0) == null) {
+            return;
+        }
+
         routeAdapter = new RouteCustomAdapter(this, R.layout.route_layout, routes);
 
         ListView listView = (ListView) findViewById(R.id.routeListView);
