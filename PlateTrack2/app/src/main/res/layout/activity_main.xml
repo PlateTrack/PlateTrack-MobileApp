@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
@@ -8,8 +9,9 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     tools:context="com.example.america.platetrack2.MainActivity">
-   <TextView
+    <TextView
        android:text="Welcome to PlateTrack"
        android:textSize="30sp"
        android:layout_width="match_parent"
@@ -58,21 +60,24 @@
         android:layout_below="@+id/row2"
         android:id="@+id/row3"
         android:weightSum="1">
+        <Space
+            android:layout_width="0dp"
+            android:layout_weight=".05"
+            android:layout_height="wrap_content" />
         <EditText
             android:layout_width="0dp"
+            android:layout_weight="0.30"
             android:layout_height="match_parent"
             android:id="@+id/platebox"
             android:background="@drawable/rectangle"
-            android:layout_weight="0.30"
             android:maxLines="1"
             android:maxLength="10" />
         ``
 
         <EditText
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_toRightOf="@+id/platebox"
             android:layout_weight="0.30"
+            android:layout_height="match_parent"
             android:background="@drawable/rectangle"
             android:onClick="calendarClick"
             android:id="@+id/dateHere"
@@ -84,7 +89,6 @@
         <EditText
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_toRightOf="@+id/dateHere"
             android:layout_weight="0.30"
             android:background="@drawable/rectangle"
             android:onClick="calendarClick2"
@@ -100,13 +104,13 @@
         android:layout_below="@+id/row3"
         android:id="@+id/row4"
         android:weightSum="1">
-    <Button
-        android:layout_width="173dp"
-        android:layout_height="50dp"
-        android:layout_below="@id/row3"
-        android:text="Search"
-        android:onClick="onClick"
-        android:id="@+id/searchBtn" />
+        <Button
+            android:layout_width="173dp"
+            android:layout_height="50dp"
+            android:layout_below="@id/row3"
+            android:text="Search"
+            android:onClick="onClick"
+            android:id="@+id/searchBtn" />
 
         <Button
             android:id="@+id/viewOnMapBtn"
@@ -114,18 +118,40 @@
             android:layout_height="wrap_content"
             android:text="View on Map" />
     </LinearLayout>
-    <ListView android:id="@+id/routeListView" android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@+id/row4" />
-<!--
-    <fragment
+
+    <ListView
+        android:id="@+id/routeListView"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".30" />
+
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:id="@+id/googleMapFragment"
-        android:layout_below="@+id/row4"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:name="com.google.android.gms.maps.MapFragment"
-        tools:layout="@layout/activity_maps" />
-        -->
-</RelativeLayout>
+        android:layout_height="50dp"
+        android:id="@+id/btmRow"
+        android:weightSum="1">
+        <Space
+            android:layout_width="0dp"
+            android:layout_weight=".4"
+            android:layout_height="wrap_content" />
+        <Button
+        android:id="@+id/btnToVideoCapture"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:text="Video Capture"
+        android:onClick="toVidClick"/>
+
+    </LinearLayout>
+    <!--
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:id="@+id/googleMapFragment"
+            android:layout_below="@+id/row4"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:name="com.google.android.gms.maps.MapFragment"
+            tools:layout="@layout/activity_maps" />
+            -->
+</LinearLayout>

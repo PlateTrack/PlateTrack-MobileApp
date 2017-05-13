@@ -227,6 +227,10 @@ public class MainActivity extends AppCompatActivity {
         DialogFragment newFragment = new DatePicker2Fragment();
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }
+    public void toVidClick(View view){
+        Intent intent = new Intent(this, VideoCaptureActivity.class);
+        startActivity(intent);
+    }
 // this function is the responsible for putting the date in the input box.
     /*  //not necessary for now
     private void setDate(final Calendar calendar) {
